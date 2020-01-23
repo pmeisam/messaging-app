@@ -1,0 +1,10 @@
+.MessageFeed{
+    border: 1px solid black;
+    height:80vh
+}
+.chat{
+    border: 1px solid black
+  }
+.chatInfo{
+    height: 10vh;
+}

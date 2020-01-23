@@ -1,0 +1,11 @@
+.chatRooms{
+    border: 1px solid black;
+    height: 90vh;
+}
+.chatroom{
+    border: 1px solid black;
+    
+  }
+.search{
+    height: 10vh;
+}
