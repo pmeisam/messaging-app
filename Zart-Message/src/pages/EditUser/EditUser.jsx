@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import userService from "../../services/uaerService";
+import userService from "../../services/userService";
 
 class EditUser extends Component {
     state = {

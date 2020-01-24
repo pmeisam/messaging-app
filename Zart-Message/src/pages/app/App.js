@@ -2,7 +2,7 @@ import "./App.css";
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import NavBar from "../../components/NavBar/NavBar";
-import userService from "../../services/uaerService";
+import userService from "../../services/userService";
 import SignupPage from '../SignupPage/SignupPage';
 import LoginPage from '../LoginPage/LoginPage';
 import EditUserPage from '../EditUser/EditUser'
@@ -17,15 +17,23 @@ class App extends Component {
       chatRoom: null
     };
   }
+  // Returns the initial state values
+  // getInitialState = () => {
+  //   return {
+  //     // colors,
+  //     // code: this.genCode(colors.length),
+  //     // selColorIdx: 0,
+  //     // guesses: [this.getNewGuess()]
+  //   }
+  // }
+
+
+  // click handlers
   handleUpdateChatRoom = (chatRoom) => {
     this.setState({chatRoom})
   }
   handleSignupOrLogin = () => {
     this.setState({user: userService.getUser()});
-  }
-  
-  componentDidMount () {
-    
   }
 
   handleLogout = () => {
@@ -33,6 +41,9 @@ class App extends Component {
     this.setState({user: null});
   }
 
+  componentDidMount () {
+
+  }
   render() {
     return (
       <>

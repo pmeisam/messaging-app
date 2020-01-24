@@ -1,5 +1,5 @@
 import tokenService from './services/tokenService';
-import uaerService from './services/uaerService';
+import uaerService from './services/userService';
 const socket = window.io();
 let chatPage = null;
 let chatroomsPage = null;

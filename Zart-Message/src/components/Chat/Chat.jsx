@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./Chat.module.css";
 import socket from '../../socket';
-import service from "../../services/uaerService";
-import uaerService from "../../services/uaerService";
+import service from "../../services/userService";
+import uaerService from "../../services/userService";
 // import {Link} from 'react-router-dom'
 
 
@@ -22,6 +22,7 @@ class Chat extends React.Component {
             chatRoomId: this.props.chatRoom._id
         }
         socket.sendMessage(obj);
+        this.setState({message: ''});
         // const chatRoom = this.state.chatRoom;
         // const user = uaerService.getUser();
         // chatRoom.message.push({user, content: this.state.message});
@@ -59,7 +60,7 @@ class Chat extends React.Component {
 
             </div>
             <form onSubmit={this.handleSendMessage}>
-                <input type="text" name="message" value={this.state.name} onChange={this.handleChange}/>
+                <input type="text" autoComplete='off' name="message" value={this.state.message} onChange={this.handleChange}/>
                 <button type='submit'>submit</button>
             </form>
         </div>

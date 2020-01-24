@@ -6,7 +6,6 @@ export default {
   getUser,
   logout,
   login,
-  editUserName,
   showUser,
   findUser,
 };
@@ -27,26 +26,7 @@ function showUser() {
   }
   );
 }
-//////////////////////////////
-function editUserName(name) {
-  return fetch (BASE_URL + 'editUser', {
-    method: 'PUT',
-    headers: new Headers({'Content-Type': 'application/json'}),
-    body: JSON.stringify(name)
-  })
-}
 
-// function searchUser(search){
-//   return fetch (BASE_URL + 'search', {
-//     method: 'POST',
-//     headers: new Headers({'Content-Type': 'application/json'}),
-//     body: JSON.stringify(search)
-//   }).then(res => {
-//     if (res.ok) return res.json();
-//     throw new Error('bad search!!');
-//   })
-// }
-//////////////////////////////
 function login(creds) {
   return fetch(BASE_URL + 'login', {
     method: 'POST',
@@ -72,7 +52,6 @@ function signup(user) {
     headers: new Headers({'Content-Type': 'application/json'}),
     body: JSON.stringify(user)
   }).then(res => {
-    console.log(res.json())
     if (res.ok) return res.json();
     // Probably a duplicate email
     // err

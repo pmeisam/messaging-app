@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import styles from './ChatRooms.module.css'
-import service from "../../services/uaerService";
+import service from "../../services/userService";
 import ChatService from '../../services/chatService'
 import socket from '../../socket';
 import chatService from '../../services/chatService';
-import userService from '../../services/uaerService';
+import userService from '../../services/userService';
 // import {Link} from 'react-router-dom'
 
 
@@ -30,7 +30,7 @@ class ChatRooms extends Component{
         e.preventDefault();
         this.setState({search: this.state.search})
         const foundUser = await userService.findUser(this.state.search);
-        this.setState({foundUser});
+        this.setState({foundUser, search: ''});
     }
 
     handleStartChat = async (userId) =>{
@@ -63,7 +63,7 @@ class ChatRooms extends Component{
             <div className={styles.chatroom}>
                 <div className={styles.search}>
                     <form onSubmit={this.handleSearch} >
-                        <input type="text" placeholder='search' name='search' value={this.state.search} onChange={this.handleChange} />
+                        <input type="number" placeholder='search' name='search' value={this.state.search} onChange={this.handleChange} />
                         <button type='submit'>search</button>
                     </form>
                     {this.state.foundUser ? 
