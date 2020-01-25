@@ -5,9 +5,11 @@ import NavBar from "../../components/NavBar/NavBar";
 import userService from "../../services/userService";
 import SignupPage from '../SignupPage/SignupPage';
 import LoginPage from '../LoginPage/LoginPage';
-import EditUserPage from '../EditUser/EditUser'
-import ChatRooms from '../../components/ChatRooms/ChatRooms'
-import Chat from '../../components/Chat/Chat'
+import ChatRooms from '../../components/ChatRooms/ChatRooms';
+import Chat from '../../components/Chat/Chat';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
+
 
 class App extends Component {
   constructor() {
@@ -77,11 +79,6 @@ class App extends Component {
             <LoginPage
               history={history}
               handleSignupOrLogin={this.handleSignupOrLogin}
-            />
-          }/>
-          <Route exact path='/editUser' render={({ history }) => 
-            <EditUserPage
-              history={history}
             />
           }/>
         </Switch>

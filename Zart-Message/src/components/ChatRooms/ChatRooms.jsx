@@ -34,9 +34,7 @@ class ChatRooms extends Component{
     }
 
     handleStartChat = async (userId) =>{
-        console.log(userId)
         const foundChat = await chatService.findChat(userId);
-        console.log(foundChat)
         this.props.handleUpdateChatRoom(foundChat);
         // this.setState({clickedChatId : e.target.value})
         // this.setState({chatsId : [this.state.clickedChatId]})

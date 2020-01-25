@@ -21,36 +21,55 @@ function init(http) {
         
         console.log('connected to io');
         //-------------------------------------------------
-        socket.on('send-message', async function({content, chatRoomId, token}) {
-            console.log("------------------------------------- SENDING A MESSAGE --------------------------------");
+        socket.on('message-seen', async function ({userId, messageId, chatRoomId, token}) {
+            console.log('------------------------------------- MESSAGE SEEN BY USER ID -------------------------------------');
+            const user = await validateToken(token);
+            if (!user) return;
+
+            console.log('userId ', userId)
+            console.log('messageId ', messageId);
+            console.log('chatRoomId ', chatRoomId);
+
+            const chat = await Chat.findById(chatRoomId)
+                            .populate('users')
+                            .populate('messages')
+                            .populate('lastViewedMessages');
+            const message = await Message.findById(messageId).populate('user');
+            chat.lastViewedMessages.forEach( m => {
+                if (m.userId !== userId) {
+                    if (message.user._id !== m.userId) {
+                        m.messageId = messageId;
+                    }
+                }
+            })
+
+            await chat.save()
+
+            socket.join(chat._id, function() {
+                io.to(chat._id).emit( 'message-seen', chat)
+            });
+        })
+
+        socket.on('send-message', async function ({content, chatRoomId, token}) {
+            console.log("------------------------------------- SENDING A MESSAGE -------------------------------------");
             const user = await validateToken(token)
             if (!user) return;
-            const chatRoom = await Chat.findById(chatRoomId).populate('message');
+            const chatRoom = await Chat.findById(chatRoomId).populate('messages');
             const newMessage = new Message({
                 user: user,
-                content: content
+                content: content,
+                username: user.name
             })
             await newMessage.save();
-            chatRoom.message.push(newMessage);
+            chatRoom.messages.push(newMessage);
             await chatRoom.save();
             socket.join(chatRoom._id, function() {
                 io.to(chatRoom._id).emit("send-message", chatRoom);
             });
-        })
-
-       //-------------------------------------------------
-       socket.on('chat-clicked', async function({ id, token }){
-            console.log(id)
-            const chat = await Chat.findById(id).populate("users");
-            const user = await validateToken(token);
-            if (!user) return;
-            socket.join(chat._id, function() {
-            io.to(chat._id).emit("chat-clicked", chat);
         });
-      });
 
-       //-------------------------------------------------
-       //-------------------------------------------------
+
+
     });
 }
 

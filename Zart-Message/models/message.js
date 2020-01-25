@@ -7,6 +7,7 @@ const messageSchema = new Schema({
     ref: 'User'
   },
   content: String,
+  username: String
 },{
   timestamps: true
 });
