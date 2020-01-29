@@ -1,5 +1,4 @@
 import tokenService from './tokenService';
-import chat from '../components/Chat/Chat'
 const BASE_URL = '/api/chats/';
 
 export default {
@@ -32,17 +31,4 @@ async function getAllChats(user){
         }).then(data => {
             return data
         })
-}
-
-function findClickedChat(id){
-    // console.log(id)
-    return fetch (BASE_URL + 'chatSelected',{
-        method: 'POST',
-        header: new Headers({'Content-Type': 'application/json', 'Accept' : 'application/json'}),
-        body: JSON.stringify(id)
-    }).then(res => {
-        return res.json()
-    }).then(data => {
-         chat.messageReciver(data)
-    })
 }

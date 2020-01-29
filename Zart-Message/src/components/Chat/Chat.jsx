@@ -1,9 +1,6 @@
 import React from "react";
 import styles from "./Chat.module.css";
 import socket from '../../socket';
-import service from "../../services/userService";
-import uaerService from "../../services/userService";
-import tokenService from "../../services/tokenService";
 import userService from "../../services/userService";
 // import {Link} from 'react-router-dom'
 
