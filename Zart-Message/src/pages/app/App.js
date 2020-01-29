@@ -7,7 +7,7 @@ import SignupPage from '../SignupPage/SignupPage';
 import LoginPage from '../LoginPage/LoginPage';
 import ChatRooms from '../../components/ChatRooms/ChatRooms';
 import Chat from '../../components/Chat/Chat';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+// import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
 

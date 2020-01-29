@@ -1,16 +1,9 @@
 import tokenService from './services/tokenService';
-import uaerService from './services/userService';
 const socket = window.io();
 let chatPage = null;
-let chatroomsPage = null;
-
-
 
 function registerApp(app) {
     chatPage = app;
-}
-function registerChatrooms(app){
-    chatroomsPage = app
 }
 //------------------------click-submit----------------
 function sendMessage({content, chatRoomId}) {
@@ -37,6 +30,5 @@ function messageSeen({userId, messageId, chatRoomId}) {
 export default {
     registerApp,
     sendMessage,
-    registerChatrooms,
     messageSeen
 }

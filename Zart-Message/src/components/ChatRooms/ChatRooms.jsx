@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import styles from './ChatRooms.module.css'
 import service from "../../services/userService";
 import ChatService from '../../services/chatService'
-import socket from '../../socket';
 import chatService from '../../services/chatService';
 import userService from '../../services/userService';
 // import {Link} from 'react-router-dom'
