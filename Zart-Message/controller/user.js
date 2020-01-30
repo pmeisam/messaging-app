@@ -17,8 +17,6 @@ module.exports = {
   }
 
   async function getUser(req, res) {
-    console.log("req.user: ", req.user);
-    console.log('inside get user method in controller')
     const user = {
       name: "Meisam",
       password: "abc123"
@@ -28,12 +26,12 @@ module.exports = {
 
   async function searchUser(req , res){
     const user = await User.findOne({phone : req.body.search})
-    console.log('search user : ' , user)
+    // console.log('search user : ' , user)
     if(user) return res.json(user)
   }
 
   function editUser (req, res) {
-    console.log("Ctrl: ",req.body)
+    // console.log("Ctrl: ",req.body)
     
   }
 

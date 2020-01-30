@@ -26,10 +26,6 @@ function init(http) {
             const user = await validateToken(token);
             if (!user) return;
 
-            console.log('userId ', userId)
-            console.log('messageId ', messageId);
-            console.log('chatRoomId ', chatRoomId);
-
             const chat = await Chat.findById(chatRoomId)
                             .populate('users')
                             .populate('messages')
@@ -52,20 +48,26 @@ function init(http) {
 
         socket.on('send-message', async function ({content, chatRoomId, token}) {
             console.log("------------------------------------- SENDING A MESSAGE -------------------------------------");
-            const user = await validateToken(token)
-            if (!user) return;
-            const chatRoom = await Chat.findById(chatRoomId).populate('messages');
-            const newMessage = new Message({
-                user: user,
-                content: content,
-                username: user.name
-            })
-            await newMessage.save();
-            chatRoom.messages.push(newMessage);
-            await chatRoom.save();
-            socket.join(chatRoom._id, function() {
-                io.to(chatRoom._id).emit("send-message", chatRoom);
-            });
+            
+            try {
+                const user = await validateToken(token)
+                if (!user) return;
+                const chatRoom = await Chat.findById(chatRoomId).populate('messages');
+                const newMessage = new Message({
+                    user: user,
+                    content: content,
+                    username: user.name
+                })
+                await newMessage.save();
+                chatRoom.messages.push(newMessage);
+                await chatRoom.save();
+                // socket.join(chatRoom._id, function() {
+                //     io.to(chatRoom._id).emit("send-message", chatRoom);
+                // });
+                io.emit('send-message', chatRoom)
+            } catch (error) {
+                throw new Error(error)
+            }
         });
 
 

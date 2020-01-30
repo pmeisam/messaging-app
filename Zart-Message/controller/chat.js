@@ -52,7 +52,7 @@ module.exports = {
   }
 
 function chatSelected(req,res){
-  console.log("chat ctrl",req)
+  // console.log("chat ctrl",req)
   Chat.findById(req.chatId).populate('messages').exec( function(err , chatMessage){
     // return res.json(chatMessage.message)
   })
