@@ -1,5 +1,11 @@
 import tokenService from './services/tokenService';
-const socket = window.io();
+// const socket = window.io();
+import socketIOClient from 'socket.io-client'
+
+export const socket = socketIOClient('http://127.0.0.1:3001')
+
+
+
 let chatPage = null;
 
 function registerApp(app) {
@@ -14,9 +20,10 @@ function sendMessage({content, chatRoomId}) {
         token
     })
 }
-socket.on('send-message', function(chatRoom) {
-    chatPage.setState({messages: chatRoom.messages})
-});
+// socket.on('send-message', function(chatRoom) {
+//     console.log(chatRoom)
+//     chatPage.setState({messages: chatRoom.messages})
+// });
 
 function messageSeen({userId, messageId, chatRoomId}) {
     const token = tokenService.getToken();

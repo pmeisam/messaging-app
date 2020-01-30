@@ -22,6 +22,7 @@ async function findChat(userId) {
 
 
 async function getAllChats(user){
+
     return await fetch (BASE_URL + 'allChats', {
         method: 'POST',
         headers: new Headers({'Content-Type': 'application/json'}),

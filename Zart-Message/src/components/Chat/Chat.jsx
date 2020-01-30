@@ -2,20 +2,29 @@ import React from "react";
 import styles from "./Chat.module.css";
 import socket from '../../socket';
 import userService from "../../services/userService";
+import {socket as socketIO} from '../../socket';
+
 // import {Link} from 'react-router-dom'
 
 
 class Chat extends React.Component {
-
+    
     state = {
         message: '',
         messages: null
     }
 
+
+    getInitialState = (messages) => {
+        this.setState({messages})
+    }
+
     // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
     //                    handle > Click <
-    handleSendMessage = (e) => {
+    handleSendMessage = async (e) => {
         e.preventDefault();
+        
+        
         const obj = {
             content: this.state.message,
             chatRoomId: this.props.chatRoom._id
@@ -23,11 +32,18 @@ class Chat extends React.Component {
         socket.sendMessage(obj);
         this.setState({message: ''});
         this.handleUpdateViewedMessage();
-        // const chatRoom = this.state.chatRoom;
-        // const user = uaerService.getUser();
-        // chatRoom.message.push({user, content: this.state.message});
-        // this.setState({chatRoom: chatRoom, message: ''});
+        console.log(1);
+        let chatPage = this;
+        socketIO.on('send-message', async function(chatRoom) {
+            console.log(chatRoom)
+            console.log(await 2);
+            chatPage.setState({messages: chatRoom.messages})
+        });
+        console.log(3)
     }
+    
+    
+
     handleUpdateViewedMessage = () => {
         if (this.props.chatRoom) {
             if (this.state.messages) {
@@ -54,10 +70,12 @@ class Chat extends React.Component {
         socket.registerApp(this);
         this.setState({messages: this.props.chatRoom.messages});
         this.handleUpdateViewedMessage();
+        console.log(4)
     }
     // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
     //                         render
     render () {
+        
         return (
         <div className={styles.chat}>
             <div className={styles.chatInfo}>info</div>

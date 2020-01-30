@@ -48,9 +48,10 @@ class ChatRooms extends Component{
     // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
     componentDidMount = async() => {
-        const latestChat = await ChatService.getAllChats(this.state.user)
-        this.setState({latestChat: latestChat})
-        console.log(latestChat)
+        if (this.state.user) {
+            const latestChat = await ChatService.getAllChats(this.state.user)
+            this.setState({latestChat: latestChat})
+        }
     }
 
     // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
