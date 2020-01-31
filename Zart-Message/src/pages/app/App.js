@@ -6,7 +6,7 @@ import userService from "../../services/userService";
 import SignupPage from '../SignupPage/SignupPage';
 import LoginPage from '../LoginPage/LoginPage';
 import ChatRooms from '../../components/ChatRooms/ChatRooms';
-import Chat from '../../components/Chat/Chat';
+import ChatWindow from '../../components/ChatWindow/ChatWindow';
 // import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
@@ -61,7 +61,7 @@ class App extends Component {
                   handleUpdateChatRoom={this.handleUpdateChatRoom}
                   chatRoom={this.state.chatRoom} />
                   {this.state.chatRoom ? 
-                  <Chat
+                  <ChatWindow
                     handleUpdateChatRoom={this.handleUpdateChatRoom}
                     chatRoom={this.state.chatRoom}
                   /> : <p>Select a chat</p>}

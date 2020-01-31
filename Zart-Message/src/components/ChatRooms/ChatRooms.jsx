@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import styles from './ChatRooms.module.css'
 import service from "../../services/userService";
-import ChatService from '../../services/chatService'
-import chatService from '../../services/chatService';
 import userService from '../../services/userService';
+import socket from '../../socket';
+import styled from 'styled-components';
 // import {Link} from 'react-router-dom'
 
 
@@ -14,7 +14,8 @@ class ChatRooms extends Component{
         latestChat: null,
         chatsId: [],
         clickedChatId : null,
-        foundUser: ''
+        foundUser: '',
+        chat: null
     }
     
     // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -30,33 +31,49 @@ class ChatRooms extends Component{
         this.setState({search: this.state.search})
         const foundUser = await userService.findUser(this.state.search);
         this.setState({foundUser, search: ''});
+        const userId = foundUser._id;
+        socket.findChat({userId});
+        
     }
 
     handleStartChat = async (userId) =>{
-        const foundChat = await chatService.findChat(userId);
+        this.props.handleUpdateChatRoom(null);
+        socket.findChat({userId});
+        const foundChat = this.state.chat;
         this.props.handleUpdateChatRoom(foundChat);
-        // this.setState({clickedChatId : e.target.value})
-        // this.setState({chatsId : [this.state.clickedChatId]})
-
-        // await chatService.findClickedChat(this.state.chatsId)
-    }
-    handleStartExistingChat = async (chatId) => {
-        const chat = await chatService.getChat(chatId);
-        this.props.handleUpdateChatRoom(chat);
     }
 
     // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 
     componentDidMount = async() => {
+        socket.registerChatRoom(this);
+
         if (this.state.user) {
-            const latestChat = await ChatService.getAllChats(this.state.user)
-            this.setState({latestChat: latestChat})
+            // const latestChat = await ChatService.getAllChats(this.state.user)
+            // this.setState({latestChat: latestChat})
+            socket.getChats({user: this.state.user});
         }
     }
 
     // <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
     //                         render
     render(){
+        const Rooms = styled.div`
+            & > ul {
+                & > li {
+                    list-style: none;
+                    & > button {
+                        border: none;
+                        border-top: 1px black solid;
+                        border-bottom: 1px black solid;
+                        margin: 0;
+                        width: 100%;
+                        height: 50px;
+                        font-size: 20px;
+                    }
+                }
+            }
+        `;
         return(
             <div className={styles.chatroom}>
                 <div className={styles.search}>
@@ -71,17 +88,19 @@ class ChatRooms extends Component{
                 }
                 </div>
                 <div className={styles.chatRooms}>
-                    {this.state.latestChat ?
-                        <ul>
-                            {this.state.latestChat.map(e => {
-                                return (
-                                <li>
-                                    <button onClick={() => this.handleStartExistingChat(Object.values(e)[0])} >{Object.keys(e)[0]} </button>
-                                </li>)
-                            })}
-                        </ul>
-                    : <p>nothing in here</p>
-                    }
+                    <Rooms>
+                        {this.state.latestChat ?
+                            <ul>
+                                {this.state.latestChat.map(e => {
+                                    return (
+                                    <li key={e._id}>
+                                        <button onClick={() => this.handleStartChat(e._id)} >{e.name} </button>
+                                    </li>)
+                                })}
+                            </ul>
+                        : <p>There is no chat yet.</p>
+                        }
+                    </Rooms>
                 </div>
 
             </div>
