@@ -4,6 +4,8 @@ import service from "../../services/userService";
 import userService from '../../services/userService';
 import socket from '../../socket';
 import styled from 'styled-components';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 // import {Link} from 'react-router-dom'
 
 
@@ -78,8 +80,18 @@ class ChatRooms extends Component{
             <div className={styles.chatroom}>
                 <div className={styles.search}>
                     <form onSubmit={this.handleSearch} >
-                        <input type="number" placeholder='search' name='search' value={this.state.search} onChange={this.handleChange} />
-                        <button type='submit'>search</button>
+                        <TextField 
+                            type="number" 
+                            placeholder='search' 
+                            name='search' 
+                            value={this.state.search} 
+                            onChange={this.handleChange}
+                            id="standard-textarea"
+                            label="Search"
+                            placeholder="(123)456-7890"
+                            multiline
+                        ></TextField>
+                        <Button variant='outlined' color='secondary' type='submit'>Search</Button>
                     </form>
                     {this.state.foundUser ? 
                         <button onClick={() => this.handleStartChat(this.state.foundUser._id)}>{this.state.foundUser.name}</button>

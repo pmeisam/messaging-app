@@ -9,6 +9,7 @@ import ChatRooms from '../../components/ChatRooms/ChatRooms';
 import ChatWindow from '../../components/ChatWindow/ChatWindow';
 // import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import styled from 'styled-components';
 
 
 class App extends Component {
@@ -47,12 +48,28 @@ class App extends Component {
 
   }
   render() {
+    const HomePage = styled.div`
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      & > .nav {
+        height: 5vh;
+      }
+      & > .chatroom-chat {
+        height: 95vh;
+        display: grid;
+        grid-template-columns: 1fr 4fr;
+      }
+
+    `;
     return (
       <>
         <Switch>
           <Route exact path="/" render={() => 
             <>
+              <HomePage>
                 <NavBar 
+                  className='nav'
                   user={this.state.user} 
                   handleLogout={this.handleLogout}
                 />
@@ -65,8 +82,8 @@ class App extends Component {
                     handleUpdateChatRoom={this.handleUpdateChatRoom}
                     chatRoom={this.state.chatRoom}
                   /> : <p>Select a chat</p>}
-                
               </div>
+              </HomePage>
             </>
           } />
           <Route exact path='/signup' render={({ history }) => 
