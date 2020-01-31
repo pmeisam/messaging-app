@@ -1,17 +1,37 @@
 import tokenService from './services/tokenService';
+import userService from './services/userService';
 // const socket = window.io();
 import socketIOClient from 'socket.io-client'
-
 export const socket = socketIOClient('http://127.0.0.1:3001')
 
 
 
-let chatPage = null;
 
-function registerApp(app) {
-    chatPage = app;
+// let chatWindow = null;
+let chatRoom = null;
+// function registerChatWindow(app) {
+//     chatWindow = app;
+// }
+function registerChatRoom(app) {
+    chatRoom = app;
 }
-//------------------------click-submit----------------
+
+
+
+
+
+function getChats({user}) {
+    const token = tokenService.getToken();
+    socket.emit('get-chats', {
+        user,
+        token
+    })
+}
+socket.on('get-chats', function(latestChat) {
+    chatRoom.setState({latestChat})
+})
+
+
 function sendMessage({content, chatRoomId}) {
     const token = tokenService.getToken();
     socket.emit('send-message',{
@@ -21,9 +41,23 @@ function sendMessage({content, chatRoomId}) {
     })
 }
 // socket.on('send-message', function(chatRoom) {
-//     console.log(chatRoom)
-//     chatPage.setState({messages: chatRoom.messages})
+//     chatWindow.setState({messages: chatRoom.messages})
 // });
+
+
+
+function findChat({userId}) {
+    const token = tokenService.getToken();
+    const loggedInUserId = userService.getUser()._id;
+    socket.emit('find-chat', {
+        userId,
+        loggedInUserId,
+        token
+    });
+}
+socket.on('find-chat', function(chat) {
+    chatRoom.setState({chat});
+})
 
 function messageSeen({userId, messageId, chatRoomId}) {
     const token = tokenService.getToken();
@@ -32,10 +66,19 @@ function messageSeen({userId, messageId, chatRoomId}) {
     })
 }
 
-//---------------------------------------------------
 
+
+
+
+
+
+
+//---------------------------------------------------
 export default {
-    registerApp,
+    // registerChatWindow,
+    registerChatRoom,
     sendMessage,
-    messageSeen
+    findChat,
+    messageSeen,
+    getChats
 }

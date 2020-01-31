@@ -18,9 +18,56 @@ function init(http) {
     io = require('socket.io')(http);
     // Listen for new connections from clients (socket)
     io.on('connection', function (socket) {
-        
         console.log('connected to io');
         //-------------------------------------------------
+        socket.on('get-chats', async function({user, token}) {
+            const validateUser = await validateToken(token);
+            if (!validateUser) return;
+
+            const foundUser = await User.findById(user._id).populate({
+                path: 'chats',
+                populate: {
+                    path: 'users',
+                    model: 'User'
+                }
+            })
+            let users = [];
+            foundUser.chats.forEach( c => {
+                const u = c.users.filter( u => JSON.stringify(u._id) !== JSON.stringify(user._id))
+                users.push(u[0])
+            })
+            socket.join(user._id, function() {
+                io.to(user._id).emit('get-chats', users);
+            })
+        })
+
+
+        socket.on('find-chat', async function({userId, loggedInUserId, token}) {
+            console.log('------------------------------------- FINDING CHAT -------------------------------------')
+            const user = await validateToken(token);
+            if (!user) return;
+
+            const user1 = await User.findById(loggedInUserId);
+            const user2 = await User.findById(userId);
+            const chatId = findExistedChat(user1, user2);
+            let chat = null;
+            if (chatId === null) {
+                chat = {users: [user1, user2], lastViewedMessages: [{userId: userId}, {userId: loggedInUserId}]};
+                const newChat = new Chat(chat);
+                await newChat.save();
+                user1.chats.push(newChat);
+                user2.chats.push(newChat);
+                await user1.save();
+                await user2.save();
+            } else {
+                chat = await Chat.findById(chatId).populate("users").populate("messages");
+            }
+            socket.join(chat._id, function() {
+                io.to(chat._id).emit("find-chat", chat);
+            });
+        })
+
+
         socket.on('message-seen', async function ({userId, messageId, chatRoomId, token}) {
             console.log('------------------------------------- MESSAGE SEEN BY USER ID -------------------------------------');
             const user = await validateToken(token);
@@ -61,10 +108,10 @@ function init(http) {
                 await newMessage.save();
                 chatRoom.messages.push(newMessage);
                 await chatRoom.save();
-                // socket.join(chatRoom._id, function() {
-                //     io.to(chatRoom._id).emit("send-message", chatRoom);
-                // });
-                io.emit('send-message', chatRoom)
+                socket.join(chatRoom._id, function() {
+                    io.to(chatRoom._id).emit("send-message", chatRoom);
+                });
+                // io.emit('send-message', chatRoom)
             } catch (error) {
                 throw new Error(error)
             }
@@ -87,3 +134,15 @@ function validateToken(token) {
         });
     });
 }
+
+function findExistedChat(user1, user2) {
+    let chatId = null;
+    user1.chats.forEach( ch1 => {
+      user2.chats.forEach( ch2 => {
+        if (JSON.stringify(ch1) === JSON.stringify(ch2)) {
+          chatId = ch1;
+        }
+      })
+    })
+    return chatId;
+  }
