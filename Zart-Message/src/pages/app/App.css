@@ -1,6 +1,4 @@
 .chatroom-chat{
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  height: 100vh
+
 }
 

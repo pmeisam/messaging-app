@@ -4,6 +4,8 @@ import socket from '../../socket';
 import {socket as socketIO} from '../../socket';
 import userService from "../../services/userService";
 import styled from 'styled-components';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button'
 import { useState } from "react";
 
 const ChatWindow = (props) => {
@@ -91,8 +93,28 @@ const ChatWindow = (props) => {
             </Messages>
             </div>
             <form onSubmit={handleSendMessage}>
-                <input type="text" autoComplete='off' name="message" value={message} onChange={handleChange}/>
-                <button type='submit'>submit</button>
+                <TextField 
+                    type="text" 
+                    autoComplete='off' 
+                    name="message" 
+                    value={message} 
+                    onChange={handleChange} 
+                    id="outlined-textarea"
+                    label="Write a message..."
+                    placeholder="Message"
+                    multiline
+                    variant="outlined"
+                ></TextField>
+                    {/* This Button uses a Font Icon, see the installation instructions in the Icon component docs. */}
+                    <Button
+                        type='submit'
+                        variant="contained"
+                        color="primary"
+                        // className={classes.button}
+                        // endIcon={<Icon>send</Icon>}
+                    >
+                        Send
+                </Button>
             </form>
         </div>
     )
